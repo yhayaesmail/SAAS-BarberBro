@@ -1,0 +1,32 @@
+.auth-page { display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 72px); }
+.auth-form-panel { display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.auth-form-box { width: 100%; max-width: 420px; }
+.auth-heading { margin-bottom: 32px; }
+.auth-heading h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.auth-heading p { color: var(--text-secondary); font-size: 0.9375rem; }
+.auth-form { display: flex; flex-direction: column; gap: 20px; }
+.auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.auth-btn { width: 100%; margin-top: 8px; }
+.auth-btn .spinner { border-color: rgba(255,255,255,0.3); border-top-color: white; }
+.auth-alt { text-align: center; margin-top: 24px; font-size: 0.875rem; color: var(--text-secondary); }
+.auth-visual-panel {
+  background: linear-gradient(135deg, #052e16 0%, #0a0a0a 50%, #052e16 100%);
+  display: flex; align-items: center; justify-content: center; padding: 60px 40px;
+  position: relative; overflow: hidden;
+}
+.auth-visual-panel::before {
+  content: ''; position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.08), transparent); top: -150px; right: -150px;
+}
+.auth-visual-panel::after {
+  content: ''; position: absolute; width: 350px; height: 350px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.06), transparent); bottom: -100px; left: -100px;
+}
+.auth-visual-inner { position: relative; z-index: 1; color: white; max-width: 440px; }
+.auth-visual-title { font-size: 2.5rem; font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 20px; }
+.auth-visual-accent { font-family: var(--font-serif); font-style: italic; font-weight: 400; color: var(--green-400); }
+.auth-visual-desc { font-size: 1rem; line-height: 1.7; opacity: 0.8; margin-bottom: 32px; }
+.auth-visual-list { display: flex; flex-direction: column; gap: 16px; }
+.auth-visual-item { display: flex; align-items: center; gap: 12px; font-size: 0.9375rem; }
+.auth-check { display: flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(34,197,94,0.2); color: var(--green-400); font-size: 0.75rem; flex-shrink: 0; }
+@media (max-width: 768px) { .auth-page { grid-template-columns: 1fr; } .auth-visual-panel { display: none; } }
