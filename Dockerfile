@@ -13,7 +13,7 @@ FROM node:20-alpine AS server
 WORKDIR /app
 
 COPY server/package*.json server/
-RUN cd server && npm ci --omit=dev && npx prisma generate --schema=prisma/schema.prisma
+RUN cd server && npm ci --omit=dev
 
 COPY server/ server/
 COPY --from=builder /app/client/dist/ client/dist/
@@ -22,4 +22,4 @@ WORKDIR /app/server
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD npx prisma generate && npx prisma migrate deploy && node server.js
