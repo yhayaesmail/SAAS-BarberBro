@@ -3,9 +3,15 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import config from './config/index.js';
 import errorHandler from './middleware/errorHandler.js';
 import { generalLimiter } from './middleware/rateLimiter.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.resolve(__dirname, '../../client/dist');
 
 import authRoutes from './modules/auth/auth.routes.js';
 import barberRoutes from './modules/barbers/barber.routes.js';
@@ -21,6 +27,10 @@ app.use(cors({ origin: config.cors.origin, credentials: true }));
 app.use(cookieParser(config.cookie.secret));
 app.use(express.json({ limit: '10kb' }));
 app.use(generalLimiter);
+
+if (config.env === 'production') {
+  app.use(express.static(distPath));
+}
 
 app.use('/api/auth', authRoutes);
 app.use('/api/barbers', barberRoutes);
@@ -38,12 +48,16 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use((_req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found',
-    code: 'NOT_FOUND',
-    timestamp: new Date().toISOString(),
-  });
+  if (config.env === 'production') {
+    res.sendFile(path.join(distPath, 'index.html'));
+  } else {
+    res.status(404).json({
+      success: false,
+      message: 'Route not found',
+      code: 'NOT_FOUND',
+      timestamp: new Date().toISOString(),
+    });
+  }
 });
 
 app.use(errorHandler);

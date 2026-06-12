@@ -1,0 +1,1 @@
+{"level":"info","timestamp":"2026-06-12T20:10:45.903Z","message":"KM-BARBER API running on port 3000 [development]"}
