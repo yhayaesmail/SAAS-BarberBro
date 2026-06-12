@@ -13,7 +13,7 @@ FROM node:20-alpine AS server
 WORKDIR /app
 
 COPY server/package*.json server/
-RUN cd server && npm ci --omit=dev && npx prisma generate
+RUN cd server && npm ci --omit=dev && npx prisma generate --schema=prisma/schema.prisma
 
 COPY server/ server/
 COPY --from=builder /app/client/dist/ client/dist/
