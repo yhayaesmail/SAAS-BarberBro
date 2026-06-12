@@ -5,7 +5,9 @@
 .bk-form textarea { resize: vertical; min-height: 80px; }
 .bk-btn { width: 100%; margin-top: 8px; }
 .bk-btn .spinner { border-color: rgba(255,255,255,0.3); border-top-color: white; }
-.bk-summary { position: sticky; top: 100px; }
+.bk-btn:hover:not(:disabled) { box-shadow: 0 8px 28px rgba(22, 163, 74, 0.4); }
+.bk-summary { position: sticky; top: 100px; transition: transform var(--transition), box-shadow var(--transition); }
+.bk-summary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
 .bk-summary h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
 .bk-summary-details { display: flex; flex-direction: column; gap: 16px; }
 .bk-summary-section span { font-size: 0.9375rem; color: var(--text-secondary); }

@@ -1,14 +1,19 @@
 .bl-page { padding-top: 40px; padding-bottom: 80px; }
 .bl-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; }
 .bl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-.bl-card { text-decoration: none; color: inherit; padding: 0; overflow: hidden; transition: all var(--transition); }
-.bl-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-.bl-card-img { height: 200px; background: linear-gradient(135deg, var(--green-100), var(--green-200)); display: flex; align-items: center; justify-content: center; }
+.bl-card { text-decoration: none; color: inherit; padding: 0; overflow: hidden; transition: all 0.3s ease; }
+.bl-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.12); }
+[data-theme='dark'] .bl-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+.bl-card-img { height: 200px; background: linear-gradient(135deg, var(--green-100), var(--green-200)); display: flex; align-items: center; justify-content: center; transition: background 0.3s ease; }
+.bl-card:hover .bl-card-img { background: linear-gradient(135deg, var(--green-200), var(--green-300)); }
 [data-theme='dark'] .bl-card-img { background: linear-gradient(135deg, #064e3b, #065f46); }
-.bl-avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--green-700); }
+[data-theme='dark'] .bl-card:hover .bl-card-img { background: linear-gradient(135deg, #065f46, #047857); }
+.bl-avatar { width: 80px; height: 80px; border-radius: 50%; background: rgba(255,255,255,0.9); display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: 700; color: var(--green-700); transition: transform 0.3s ease; }
+.bl-card:hover .bl-avatar { transform: scale(1.12); }
 [data-theme='dark'] .bl-avatar { background: rgba(0,0,0,0.5); color: var(--green-400); }
 .bl-card-body { padding: 20px; }
-.bl-card-body h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 4px; }
+.bl-card-body h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 4px; transition: color var(--transition); }
+.bl-card:hover .bl-card-body h3 { color: var(--green-600); }
 .bl-username { font-size: 0.8125rem; color: var(--text-muted); margin-bottom: 8px; }
 .bl-bio { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .bl-card-footer { display: flex; justify-content: space-between; font-size: 0.8125rem; color: var(--text-muted); }

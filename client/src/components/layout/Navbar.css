@@ -12,13 +12,14 @@
   display: flex; align-items: center; justify-content: center; height: 100%; gap: 32px;
 }
 
-.navbar-brand { display: flex; align-items: center; gap: 2px; flex-shrink: 0; text-decoration: none; }
+.navbar-brand { display: flex; align-items: center; gap: 2px; flex-shrink: 0; text-decoration: none; transition: transform var(--transition); }
+.navbar-brand:hover { transform: scale(1.04); }
 .brand-km { font-size: 1.5rem; font-weight: 800; color: var(--green-600); letter-spacing: -0.03em; }
 .brand-barber { font-size: 1.5rem; font-weight: 300; color: var(--text-primary); letter-spacing: -0.02em; }
 
 .navbar-nav { display: flex; align-items: center; justify-content: center; gap: 24px; flex: 1; }
-.nav-link { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: color var(--transition); white-space: nowrap; }
-.nav-link:hover { color: var(--green-600); }
+.nav-link { font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); text-decoration: none; transition: all var(--transition); white-space: nowrap; }
+.nav-link:hover { color: var(--green-600); transform: translateY(-1px); }
 
 .nav-search { flex: 1; max-width: 260px; }
 .search-input {
@@ -43,6 +44,8 @@
   transition: background var(--transition);
 }
 .search-suggestion-item:hover { background: var(--bg-secondary); }
+.search-suggestion-item:active { background: var(--green-50); }
+[data-theme='dark'] .search-suggestion-item:active { background: #064e3b; }
 .ss-name { font-weight: 500; }
 .ss-username { font-size: 0.75rem; color: var(--text-muted); }
 
@@ -51,8 +54,10 @@
 [data-theme='dark'] .theme-btn:hover { background: #1f2937; }
 
 .nav-user { display: flex; align-items: center; gap: 12px; }
-.nav-user-name { font-size: 0.875rem; font-weight: 600; color: #87ceeb; }
-.admin-link { color: var(--green-600) !important; font-weight: 600; }
+.nav-user-name { font-size: 0.875rem; font-weight: 600; color: var(--green-600); }
+.admin-link { color: var(--green-600) !important; font-weight: 600; position: relative; }
+.admin-link::after { content: '?'; position: absolute; top: -4px; right: -8px; font-size: 0.5rem; color: var(--green-500); animation: adminPulse 2s ease-in-out infinite; }
+@keyframes adminPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
 .menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
 .hamburger { display: block; width: 20px; height: 2px; background: var(--text-primary); position: relative; transition: all var(--transition); }
