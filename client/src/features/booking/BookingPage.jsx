@@ -15,7 +15,7 @@ export default function BookingPage() {
 
   if (!selectedServices || !selectedSlot) {
     return (
-      <div className="bk-page container">
+      <div className="bk-page container-fluid">
         <div className="empty-state">
           <h3>No booking information found</h3>
           <p>Please select a barber and services first.</p>
@@ -47,7 +47,7 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="bk-page container">
+    <div className="bk-page container-fluid">
       <h1 className="bk-title">Complete Your Booking</h1>
       <div className="bk-layout">
         <div className="bk-form">

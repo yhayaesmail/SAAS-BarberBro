@@ -72,6 +72,9 @@ export default function Navbar() {
           {user && (
             <Link to="/my-reservations" className="nav-link" onClick={() => setMenuOpen(false)}>My Reservations</Link>
           )}
+          {user && user.role === 'ADMIN' && (
+            <Link to="/admin" className="nav-link admin-link" onClick={() => setMenuOpen(false)}>Admin</Link>
+          )}
           <div className="nav-search" ref={searchRef}>
             <form onSubmit={handleSearch}>
               <input
@@ -94,18 +97,18 @@ export default function Navbar() {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="nav-right">
           {user ? (
             <div className="nav-user">
               <span className="nav-user-name">{user.firstName}</span>
-              {user.role === 'ADMIN' && (
-                <Link to="/admin" className="nav-link admin-link" onClick={() => setMenuOpen(false)}>Admin</Link>
-              )}
-              <button className="btn btn-sm btn-outline" onClick={() => { logout(); navigate('/'); setMenuOpen(false); }}>
+              <button className="btn-signin" onClick={() => { logout(); navigate('/'); setMenuOpen(false); }}>
                 Sign Out
               </button>
             </div>
           ) : (
-            <Link to="/login" className="btn btn-sm btn-primary" onClick={() => setMenuOpen(false)}>Sign In</Link>
+            <Link to="/login" className="btn-signin" onClick={() => setMenuOpen(false)}>Sign In</Link>
           )}
         </div>
       </div>

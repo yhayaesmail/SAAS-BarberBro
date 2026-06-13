@@ -21,7 +21,7 @@ export default function BarberList() {
   }, [search]);
 
   if (loading) return (
-    <div className="bl-page container">
+    <div className="bl-page container-fluid">
       <h1 className="bl-title">{search ? `Results for "${search}"` : 'Our Barbers'}</h1>
       <div className="bl-grid">
         {Array.from({ length: 6 }).map((_, i) => (
@@ -32,7 +32,7 @@ export default function BarberList() {
   );
 
   return (
-    <div className="bl-page container">
+    <div className="bl-page container-fluid">
       <h1 className="bl-title">{search ? `Results for "${search}"` : 'Our Barbers'}</h1>
       {barbers.length === 0 ? (
         <div className="empty-state">

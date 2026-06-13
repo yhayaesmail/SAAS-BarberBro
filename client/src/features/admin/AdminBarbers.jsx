@@ -21,13 +21,12 @@ export default function AdminBarbers() {
     try { await api.patch(`/admin/barbers/${barberId}/toggle`); fetchData(); } catch {}
   };
 
-  if (loading) return <div className="ad-page container"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
+  if (loading) return <div className="ad-page container-fluid"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
 
   return (
-    <div className="ad-page container">
+    <div className="ad-page container-fluid">
       <div className="ad-header">
         <div><h1>Barbers</h1><p>Manage barber profiles</p></div>
-        <Link to="/admin/barbers/new" className="btn btn-rainbow">Add Barber</Link>
       </div>
       <nav className="ad-nav">
         <Link to="/admin" className="ad-nav-item">Dashboard</Link>
@@ -35,6 +34,9 @@ export default function AdminBarbers() {
         <Link to="/admin/services" className="ad-nav-item">Services</Link>
         <Link to="/admin/reservations" className="ad-nav-item">Reservations</Link>
       </nav>
+      <div className="ad-toolbar">
+        <Link to="/admin/barbers/new" className="btn btn-primary">Add Barber</Link>
+      </div>
       <div className="ad-table-wrap">
         <table className="ad-table">
           <thead><tr><th>Name</th><th>Username</th><th>Phone</th><th>Hours</th><th>Status</th><th>Actions</th></tr></thead>

@@ -20,10 +20,10 @@ export default function AdminReservations() {
     })();
   }, [page]);
 
-  if (loading) return <div className="ad-page container"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
+  if (loading) return <div className="ad-page container-fluid"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
 
   return (
-    <div className="ad-page container">
+    <div className="ad-page container-fluid">
       <div className="ad-header"><h1>Reservations</h1><p>All platform reservations</p></div>
       <nav className="ad-nav">
         <Link to="/admin" className="ad-nav-item">Dashboard</Link>

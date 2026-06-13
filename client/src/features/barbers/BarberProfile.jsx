@@ -42,11 +42,11 @@ export default function BarberProfile() {
   const totalDuration = selected.reduce((sum, s) => sum + s.duration, 0);
   const totalPrice = selected.reduce((sum, s) => sum + Number(s.price), 0);
 
-  if (loading) return <div className="bp-page container"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
-  if (!barber) return <div className="bp-page container"><div className="empty-state"><h3>Barber not found</h3><Link to="/barbers" className="btn btn-outline">Browse Barbers</Link></div></div>;
+  if (loading) return <div className="bp-page container-fluid"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
+  if (!barber) return <div className="bp-page container-fluid"><div className="empty-state"><h3>Barber not found</h3><Link to="/barbers" className="btn btn-outline">Browse Barbers</Link></div></div>;
 
   return (
-    <div className="bp-page container">
+    <div className="bp-page container-fluid">
       <div className="bp-header">
         <div className="bp-avatar-lg">{barber.name.charAt(0)}</div>
         <div>

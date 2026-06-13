@@ -32,17 +32,20 @@ export default function AdminServices() {
     } catch (err) { setError(err.message); } finally { setSaving(false); }
   };
 
-  if (loading) return <div className="ad-page container"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
+  if (loading) return <div className="ad-page container-fluid"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
 
   return (
-    <div className="ad-page container">
-      <div className="ad-header"><div><h1>Services</h1><p>Manage service offerings</p></div><button className="btn btn-primary" onClick={openCreate}>Add Service</button></div>
+    <div className="ad-page container-fluid">
+      <div className="ad-header"><div><h1>Services</h1><p>Manage service offerings</p></div></div>
       <nav className="ad-nav">
         <Link to="/admin" className="ad-nav-item">Dashboard</Link>
         <Link to="/admin/barbers" className="ad-nav-item">Barbers</Link>
         <Link to="/admin/services" className="ad-nav-item active">Services</Link>
         <Link to="/admin/reservations" className="ad-nav-item">Reservations</Link>
       </nav>
+      <div className="ad-toolbar">
+        <button className="btn btn-primary" onClick={openCreate}>Add Service</button>
+      </div>
       <div className="ad-table-wrap">
         <table className="ad-table">
           <thead><tr><th>Name</th><th>Description</th><th>Price</th><th>Duration</th><th>Status</th><th>Actions</th></tr></thead>

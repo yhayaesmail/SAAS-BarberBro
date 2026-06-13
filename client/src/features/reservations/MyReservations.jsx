@@ -25,10 +25,10 @@ export default function MyReservations() {
     } catch (err) { alert(err.message); }
   };
 
-  if (loading) return <div className="rs-page container"><h1 className="rs-title">My Reservations</h1><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
+  if (loading) return <div className="rs-page container-fluid"><h1 className="rs-title">My Reservations</h1><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
 
   return (
-    <div className="rs-page container">
+    <div className="rs-page container-fluid">
       <h1 className="rs-title">My Reservations</h1>
       {message && <div className="success-message">{message}</div>}
       {reservations.length === 0 ? (

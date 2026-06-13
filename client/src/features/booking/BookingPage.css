@@ -1,22 +1,132 @@
-.bk-page { padding-top: 40px; padding-bottom: 80px; }
-.bk-title { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 32px; }
-.bk-layout { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; }
-.bk-form form { display: flex; flex-direction: column; gap: 20px; }
-.bk-form textarea { resize: vertical; min-height: 80px; }
-.bk-btn { width: 100%; margin-top: 8px; }
-.bk-btn .spinner { border-color: rgba(255,255,255,0.3); border-top-color: white; }
-.bk-btn:hover:not(:disabled) { box-shadow: 0 8px 28px rgba(22, 163, 74, 0.4); }
-.bk-summary { position: sticky; top: 100px; transition: transform var(--transition), box-shadow var(--transition); }
-.bk-summary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-.bk-summary h3 { font-size: 1.125rem; font-weight: 600; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
-.bk-summary-details { display: flex; flex-direction: column; gap: 16px; }
-.bk-summary-section span { font-size: 0.9375rem; color: var(--text-secondary); }
-[data-theme='dark'] .bk-summary-section span { color: #d0d0d0; }
-.bk-summary-section ul { list-style: none; margin-top: 8px; }
-.bk-summary-section li { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary); padding: 4px 0; }
-[data-theme='dark'] .bk-summary-section li { color: #c0c0c0; }
-.bk-summary-section li span { color: var(--text-muted); }
-.bk-summary-row { display: flex; justify-content: space-between; font-size: 0.9375rem; }
-.bk-summary-row strong { font-weight: 600; }
-.bk-price { color: var(--green-600); font-size: 1.125rem; }
-@media (max-width: 900px) { .bk-layout { grid-template-columns: 1fr; } .bk-summary { position: static; } }
+.bk-page {
+  padding-top: 72px;
+  padding-bottom: 80px;
+  background: var(--bg-secondary);
+  min-height: 100vh;
+}
+
+.bk-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 32px;
+  color: var(--white);
+}
+
+.bk-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+.bk-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bk-form textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.bk-form .input-group label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bk-form .input-group input,
+.bk-form .input-group textarea {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--white);
+}
+
+.bk-form .input-group input:focus,
+.bk-form .input-group textarea:focus {
+  border-color: var(--green-500);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
+}
+
+.bk-form .input-group input::placeholder,
+.bk-form .input-group textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.bk-btn {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.bk-btn .spinner {
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+}
+
+.bk-summary {
+  position: sticky;
+  top: 100px;
+}
+
+.bk-summary h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--white);
+}
+
+.bk-summary-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.bk-summary-section span {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bk-summary-section ul {
+  list-style: none;
+  margin-top: 8px;
+}
+
+.bk-summary-section li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.4);
+  padding: 4px 0;
+}
+
+.bk-summary-section li span {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.bk-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.bk-summary-row strong {
+  font-weight: 600;
+}
+
+.bk-price {
+  color: var(--green-400);
+  font-size: 1.125rem;
+}
+
+@media (max-width: 900px) {
+  .bk-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .bk-summary {
+    position: static;
+  }
+}
