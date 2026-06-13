@@ -1,8 +1,7 @@
-# KM-BARBER
+# KM-BARBER  [![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=railway)](https://saas-barberbro-production.up.railway.app/)
 
 > Premium barbershop appointment booking & management platform
 
-[![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=railway)](https://saas-barberbro-production.up.railway.app/)
 [![Express](https://img.shields.io/badge/express-4.21-000?style=flat&logo=express)](https://expressjs.com/)
 [![React](https://img.shields.io/badge/react-18.3-61dafb?style=flat&logo=react)](https://react.dev/)
 [![Prisma](https://img.shields.io/badge/prisma-7-2d3748?style=flat&logo=prisma)](https://www.prisma.io/)
