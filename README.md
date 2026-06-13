@@ -1,4 +1,4 @@
-# KM-BARBER  [![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=railway)](https://saas-barberbro-production.up.railway.app/)
+# KM-BARBER  <a href="https://saas-barberbro-production.up.railway.app/" target="_blank" rel="noopener noreferrer">![Live Demo](https://img.shields.io/badge/demo-live-22c55e?style=for-the-badge&logo=railway)</a>
 
 > Premium barbershop appointment booking & management platform
 
