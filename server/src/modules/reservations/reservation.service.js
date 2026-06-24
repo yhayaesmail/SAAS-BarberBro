@@ -79,7 +79,7 @@ export async function getByCustomer(customerId, { page, limit }) {
   return reservationRepository.findByCustomer(customerId, { page, limit });
 }
 
-export async function cancel(reservationId, user) {
+export async function cancel(reservationId, user, data = {}) {
   const reservation = await reservationRepository.findById(reservationId);
   if (!reservation) throw new NotFoundError('Reservation not found');
 
@@ -99,5 +99,9 @@ export async function cancel(reservationId, user) {
     throw new ValidationError('Cannot cancel reservation less than 1 hour before start time');
   }
 
-  return reservationRepository.updateStatus(reservationId, 'CANCELLED');
+  return reservationRepository.updateStatus(reservationId, 'CANCELLED', data.reason);
+}
+
+export async function getByBarber(barberId, { page, limit }) {
+  return reservationRepository.findByBarber(barberId, { page, limit });
 }

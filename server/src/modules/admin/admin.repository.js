@@ -71,15 +71,38 @@ export async function findBarberByUsernameExcluding(username, excludeId) {
   });
 }
 
-export async function findAllBarbers() {
-  return prisma.barber.findMany({
-    include: {
-      user: { select: { id: true, email: true, active: true } },
-      services: { include: { service: true } },
-      workingHours: { orderBy: { dayOfWeek: 'asc' } },
-    },
-    orderBy: { name: 'asc' },
+export async function findAllBarbers({ where, page, limit }) {
+  const [data, total] = await Promise.all([
+    prisma.barber.findMany({
+      where,
+      include: {
+        user: { select: { id: true, email: true, active: true } },
+        services: { include: { service: true } },
+        workingHours: { orderBy: { dayOfWeek: 'asc' } },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { name: 'asc' },
+    }),
+    prisma.barber.count({ where }),
+  ]);
+  return { data, total };
+}
+
+export async function sumRevenue() {
+  const result = await prisma.reservation.aggregate({
+    where: { status: 'COMPLETED' },
+    _sum: { totalPrice: true },
   });
+  return Number(result._sum.totalPrice || 0);
+}
+
+export async function sumRevenueSince(date) {
+  const result = await prisma.reservation.aggregate({
+    where: { status: 'COMPLETED', startTime: { gte: date } },
+    _sum: { totalPrice: true },
+  });
+  return Number(result._sum.totalPrice || 0);
 }
 
 export async function createBarber(data, hashedPassword) {
@@ -88,7 +111,7 @@ export async function createBarber(data, hashedPassword) {
       data: {
         firstName: data.name.split(' ')[0] || data.name,
         lastName: data.name.split(' ').slice(1).join(' ') || 'Barber',
-        email: data.email || `${data.username}@km-barber.local`,
+        email: data.email,
         password: hashedPassword,
         role: 'BARBER',
       },

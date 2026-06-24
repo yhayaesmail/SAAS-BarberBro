@@ -15,7 +15,7 @@ export default function AdminBarberForm() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
-    name: '', username: '', bio: '', phone1: '', phone2: '', email: '',
+    name: '', username: '', bio: '', phone1: '', phone2: '', email: '', password: '', imageUrl: '',
     startTime: '09:00', endTime: '21:00',
     services: [],
     workingHours: DAYS.map((_, i) => ({ dayOfWeek: i, startTime: '09:00', endTime: '21:00', isActive: i !== 5 })),
@@ -29,7 +29,7 @@ export default function AdminBarberForm() {
           const [bRes] = await Promise.all([api.get(`/admin/barbers/${id}`)]);
           const b = bRes.data;
           setForm({
-            name: b.name, username: b.username, bio: b.bio || '', phone1: b.phone1, phone2: b.phone2 || '', email: b.email || '',
+            name: b.name, username: b.username, bio: b.bio || '', phone1: b.phone1, phone2: b.phone2 || '', email: b.email || '', imageUrl: b.imageUrl || '',
             startTime: b.startTime, endTime: b.endTime,
             services: b.services?.map((s) => ({ serviceId: s.serviceId, price: s.price ?? '', duration: s.duration ?? '' })) || [],
             workingHours: b.workingHours?.length > 0
@@ -82,8 +82,9 @@ export default function AdminBarberForm() {
     e.preventDefault();
     setSaving(true); setError('');
     try {
+      const { password, ...base } = form;
       const payload = {
-        ...form,
+        ...base,
         services: form.services.map((s) => ({
           serviceId: s.serviceId,
           price: s.price ? Number(s.price) : undefined,
@@ -91,7 +92,7 @@ export default function AdminBarberForm() {
         })),
       };
       if (isEdit) await api.put(`/admin/barbers/${id}`, payload);
-      else await api.post('/admin/barbers', payload);
+      else await api.post('/admin/barbers', { ...payload, password });
       navigate('/admin/barbers');
     } catch (err) { setError(err.message); }
     finally { setSaving(false); }
@@ -119,12 +120,30 @@ export default function AdminBarberForm() {
 
         <div className="input-group"><label>Bio</label><textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} rows={2} /></div>
 
+        <div className="input-group">
+          <label>Profile Image</label>
+          <input type="file" accept=".jpg,.jpeg,.png,.webp" onChange={async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const fd = new FormData();
+            fd.append('image', file);
+            try {
+              const res = await api.post('/upload/barber-image', fd);
+              setForm({ ...form, imageUrl: res.data.url });
+            } catch (err) { setError(err.message); }
+          }} />
+          {form.imageUrl && <img src={form.imageUrl} alt="Preview" style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover', marginTop: 8 }} />}
+        </div>
+
         <div className="ad-form-row">
           <div className="input-group"><label>Phone 1</label><input value={form.phone1} onChange={(e) => setForm({ ...form, phone1: e.target.value })} required /></div>
           <div className="input-group"><label>Phone 2</label><input value={form.phone2} onChange={(e) => setForm({ ...form, phone2: e.target.value })} /></div>
         </div>
 
-        <div className="input-group"><label>Email</label><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
+        <div className="ad-form-row">
+          <div className="input-group"><label>Email (for login)</label><input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} required={!isEdit} /></div>
+          {!isEdit && <div className="input-group"><label>Password</label><input type="password" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} required={!isEdit} minLength={6} /></div>}
+        </div>
 
         <div className="ad-form-row">
           <div className="input-group"><label>Start Time</label><input type="time" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} required /></div>

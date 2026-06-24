@@ -9,12 +9,14 @@ export default function errorHandler(err, req, res, _next) {
       path: req.path,
       method: req.method,
       details: err.details,
+      requestId: req.id,
     });
     const body = {
       success: false,
       message: err.message,
       code: err.code,
       timestamp: new Date().toISOString(),
+      requestId: req.id,
     };
     if (err.details) body.details = err.details;
     return res.status(err.statusCode).json(body);
@@ -24,6 +26,7 @@ export default function errorHandler(err, req, res, _next) {
     stack: err.stack,
     path: req.path,
     method: req.method,
+    requestId: req.id,
   });
 
   return res.status(500).json({
@@ -31,5 +34,6 @@ export default function errorHandler(err, req, res, _next) {
     message: 'Internal server error',
     code: 'INTERNAL_ERROR',
     timestamp: new Date().toISOString(),
+    requestId: req.id,
   });
 }

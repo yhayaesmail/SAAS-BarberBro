@@ -23,9 +23,10 @@ export async function findByCustomer(customerId, { page, limit }) {
   return { data, total };
 }
 
-export async function findAll({ page, limit }) {
+export async function findAll({ page, limit, where = {} }) {
   const [data, total] = await Promise.all([
     prisma.reservation.findMany({
+      where,
       include: {
         customer: { select: { firstName: true, lastName: true } },
         barber: { select: { name: true } },
@@ -35,7 +36,7 @@ export async function findAll({ page, limit }) {
       take: limit,
       orderBy: { createdAt: 'desc' },
     }),
-    prisma.reservation.count(),
+    prisma.reservation.count({ where }),
   ]);
   return { data, total };
 }
@@ -84,10 +85,30 @@ export async function createWithLock({ barberId, startTime, endTime, customerId,
   });
 }
 
-export async function updateStatus(id, status) {
+export async function findByBarber(barberId, { page, limit }) {
+  const where = { barberId };
+  const [data, total] = await Promise.all([
+    prisma.reservation.findMany({
+      where,
+      include: {
+        services: { include: { service: true } },
+        customer: { select: { firstName: true, lastName: true, phone: true } },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: { startTime: 'desc' },
+    }),
+    prisma.reservation.count({ where }),
+  ]);
+  return { data, total };
+}
+
+export async function updateStatus(id, status, cancellationReason) {
+  const data = { status };
+  if (cancellationReason) data.cancellationReason = cancellationReason;
   return prisma.reservation.update({
     where: { id },
-    data: { status },
+    data,
   });
 }
 

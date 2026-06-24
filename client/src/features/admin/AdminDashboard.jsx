@@ -31,7 +31,8 @@ export default function AdminDashboard() {
           { label: 'Active Barbers', value: stats?.activeBarbers || 0 },
           { label: 'Total Reservations', value: stats?.totalReservations || 0 },
           { label: "Today's Reservations", value: stats?.todayReservations || 0 },
-          { label: 'Revenue (est.)', value: `EGP ${stats?.revenuePlaceholder || 0}` },
+          { label: 'Total Revenue', value: `EGP ${Number(stats?.totalRevenue || 0).toLocaleString()}` },
+          { label: 'Revenue (This Month)', value: `EGP ${Number(stats?.monthlyRevenue || 0).toLocaleString()}` },
         ].map((s, i) => (
           <div key={i} className="ad-stat-card card">
             <span className="ad-stat-val">{s.value}</span>

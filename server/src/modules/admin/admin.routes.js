@@ -17,6 +17,8 @@ router.patch('/barbers/:id/toggle', adminController.toggleBarberStatus);
 router.get('/services', adminController.getAllServices);
 router.post('/services', adminController.createService);
 router.put('/services/:id', adminController.updateService);
+router.patch('/services/:id/toggle', adminController.toggleServiceStatus);
 router.get('/reservations', adminController.getAllReservations);
+router.patch('/reservations/:id/status', adminController.updateReservationStatus);
 
 export default router;

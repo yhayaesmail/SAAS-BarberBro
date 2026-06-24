@@ -33,8 +33,29 @@ export async function getMyReservations(req, res, next) {
 
 export async function cancel(req, res, next) {
   try {
-    const reservation = await reservationService.cancel(req.params.id, req.user);
+    const reservation = await reservationService.cancel(req.params.id, req.user, req.body);
     return success(res, reservation, 'Reservation cancelled successfully');
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function getMyBarberReservations(req, res, next) {
+  try {
+    const { page = 1, limit = 20 } = req.query;
+    const result = await reservationService.getByBarber(req.user.barberId, { page: Number(page), limit: Number(limit) });
+    return res.status(200).json({
+      success: true,
+      message: 'Reservations retrieved successfully',
+      data: result.data,
+      pagination: {
+        total: result.total,
+        page: Number(page),
+        limit: Number(limit),
+        totalPages: Math.ceil(result.total / Number(limit)),
+      },
+      timestamp: new Date().toISOString(),
+    });
   } catch (err) {
     next(err);
   }

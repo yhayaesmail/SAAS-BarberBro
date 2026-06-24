@@ -67,7 +67,8 @@ export default function BarberProfile() {
               const isSelected = selected.find((s) => s.id === svc.id);
               return (
                 <button key={bs.service.id} className={`bp-service-card card ${isSelected ? 'selected' : ''}`} onClick={() => toggleService(svc)}>
-                  <div><h4>{bs.service.name}</h4>{bs.service.description && <p>{bs.service.description}</p>}</div>
+                  {isSelected && <span className="bp-check-mark">&#10003;</span>}
+                  <div className="bp-card-body"><h4>{bs.service.name}</h4>{bs.service.description && <p>{bs.service.description}</p>}</div>
                   <div className="bp-service-meta"><span className="bp-price">EGP {Number(svc.price).toFixed(0)}</span><span className="bp-duration">{svc.duration} min</span></div>
                 </button>
               );
@@ -117,7 +118,7 @@ export default function BarberProfile() {
                 {selectedSlot && <div className="bp-summary-row"><span>Selected Time</span><strong>{selectedSlot.startTime}</strong></div>}
               </div>
               {user ? (
-                <Link to={`/barbers/${id}/book`} state={{ selectedServices: selected, selectedSlot: selectedSlot?.dateTime, totalDuration, totalPrice }}
+                <Link to={`/barbers/${id}/book?services=${selected.map((s) => s.id).join(',')}&slot=${selectedSlot?.dateTime || ''}&duration=${totalDuration}&price=${totalPrice}&date=${date}`}
                   className={`btn btn-primary btn-lg bp-cta ${!selectedSlot ? 'disabled' : ''}`} onClick={(e) => { if (!selectedSlot) e.preventDefault(); }}>Proceed to Checkout</Link>
               ) : (
                 <Link to={`/login?redirect=/barbers/${id}`} className="btn btn-primary btn-lg bp-cta">Sign In to Book</Link>

@@ -8,12 +8,12 @@ const server = app.listen(config.port, () => {
 });
 
 process.on('unhandledRejection', (err) => {
-  logger.error('Unhandled rejection', { message: err.message, stack: err.stack });
+  logger.error('Unhandled rejection', { message: err.message, stack: err.stack, requestId: 'system' });
   server.close(() => process.exit(1));
 });
 
 process.on('uncaughtException', (err) => {
-  logger.error('Uncaught exception', { message: err.message, stack: err.stack });
+  logger.error('Uncaught exception', { message: err.message, stack: err.stack, requestId: 'system' });
   server.close(() => process.exit(1));
 });
 

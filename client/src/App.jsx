@@ -2,12 +2,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/layout/Navbar.jsx';
 import Footer from './components/layout/Footer.jsx';
-import ThemeToggle from './components/ui/ThemeToggle.jsx';
 import Home from './features/home/Home.jsx';
 import Login from './features/auth/Login.jsx';
 import Register from './features/auth/Register.jsx';
+import ForgotPassword from './features/auth/ForgotPassword.jsx';
+import ResetPassword from './features/auth/ResetPassword.jsx';
+import Settings from './features/auth/Settings.jsx';
 import BarberList from './features/barbers/BarberList.jsx';
 import BarberProfile from './features/barbers/BarberProfile.jsx';
+import BarberDashboard from './features/barbers/BarberDashboard.jsx';
 import BookingPage from './features/booking/BookingPage.jsx';
 import MyReservations from './features/reservations/MyReservations.jsx';
 import AdminDashboard from './features/admin/AdminDashboard.jsx';
@@ -42,6 +45,10 @@ export default function App() {
           <Route path="/barbers/:id" element={<BarberProfile />} />
           <Route path="/barbers/:id/book" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
           <Route path="/my-reservations" element={<ProtectedRoute><MyReservations /></ProtectedRoute>} />
+          <Route path="/my-schedule" element={<ProtectedRoute roles={['BARBER']}><BarberDashboard /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/admin" element={<ProtectedRoute roles={['ADMIN']}><AdminDashboard /></ProtectedRoute>} />
           <Route path="/admin/barbers" element={<ProtectedRoute roles={['ADMIN']}><AdminBarbers /></ProtectedRoute>} />
           <Route path="/admin/barbers/new" element={<ProtectedRoute roles={['ADMIN']}><AdminBarberForm /></ProtectedRoute>} />
@@ -50,7 +57,6 @@ export default function App() {
           <Route path="/admin/reservations" element={<ProtectedRoute roles={['ADMIN']}><AdminReservations /></ProtectedRoute>} />
         </Routes>
       </main>
-      <ThemeToggle />
       <Footer />
     </>
   );

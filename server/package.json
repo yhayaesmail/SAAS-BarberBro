@@ -11,7 +11,9 @@
     "migrate": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev",
     "generate": "npx prisma generate",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "test": "node --experimental-test-coverage src/__tests__/*.test.js",
+    "test:watch": "node --watch src/__tests__/*.test.js"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
@@ -25,6 +27,7 @@
     "express-rate-limit": "^7.1.5",
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.2.0",
     "pg": "^8.11.3",
     "prisma": "^7.8.0"
   }

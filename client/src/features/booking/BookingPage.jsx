@@ -1,19 +1,49 @@
-import { useState } from 'react';
-import { useLocation, useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { api } from '../../api/client.js';
+import { useToast } from '../../context/ToastContext.jsx';
+import { useFormField, required, isPhone, isEmail } from '../../hooks/useFormField.js';
 import './BookingPage.css';
 
 export default function BookingPage() {
   const { id } = useParams();
-  const { state } = useLocation();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { selectedServices, selectedSlot, totalDuration, totalPrice } = state || {};
+  const toast = useToast();
 
-  const [form, setForm] = useState({ customerPhone: '', customerEmail: '', notes: '' });
-  const [error, setError] = useState('');
+  const [services, setServices] = useState([]);
+  const [loadingServices, setLoadingServices] = useState(true);
+
+  const serviceIds = searchParams.get('services')?.split(',').filter(Boolean) || [];
+  const selectedSlot = searchParams.get('slot') || '';
+  const totalDuration = Number(searchParams.get('duration')) || 0;
+  const totalPrice = Number(searchParams.get('price')) || 0;
+
+  useEffect(() => {
+    if (serviceIds.length === 0 || !selectedSlot) { setLoadingServices(false); return; }
+    (async () => {
+      try {
+        const res = await api.get(`/barbers/${id}`);
+        const barber = res.data;
+        const matched = (barber.services || [])
+          .filter((bs) => serviceIds.includes(bs.service.id))
+          .map((bs) => ({
+            id: bs.service.id,
+            name: bs.service.name,
+            price: bs.price || bs.service.price,
+            duration: bs.duration || bs.service.duration,
+          }));
+        setServices(matched);
+      } catch {} finally { setLoadingServices(false); }
+    })();
+  }, [id, serviceIds, selectedSlot]);
+
+  const phone = useFormField('', [required('Phone number is required'), isPhone()]);
+  const customerEmail = useFormField('', [isEmail()]);
+  const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
 
-  if (!selectedServices || !selectedSlot) {
+  if (serviceIds.length === 0 || !selectedSlot) {
     return (
       <div className="bk-page container-fluid">
         <div className="empty-state">
@@ -27,43 +57,57 @@ export default function BookingPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    phone.validate();
+    if (phone.error || !phone.value) return;
     setLoading(true);
-    setError('');
     try {
       await api.post('/reservations', {
         barberId: id,
-        serviceIds: selectedServices.map((s) => s.id),
+        serviceIds,
         startTime: selectedSlot,
-        customerPhone: form.customerPhone,
-        customerEmail: form.customerEmail || undefined,
-        notes: form.notes,
+        customerPhone: phone.value,
+        customerEmail: customerEmail.value || undefined,
+        notes,
       });
-      navigate('/my-reservations', { state: { message: 'Reservation confirmed successfully!' } });
+      toast.success('Reservation confirmed successfully!');
+      navigate('/my-reservations');
     } catch (err) {
-      setError(err.message || 'Failed to create reservation');
+      toast.error(err.message || 'Failed to create reservation');
     } finally {
       setLoading(false);
     }
   };
+
+  if (loadingServices) return <div className="bk-page container-fluid"><div className="loading-screen"><div className="spinner spinner-lg" /></div></div>;
 
   return (
     <div className="bk-page container-fluid">
       <h1 className="bk-title">Complete Your Booking</h1>
       <div className="bk-layout">
         <div className="bk-form">
-          {error && <div className="error-message">{error}</div>}
           <form onSubmit={handleSubmit}>
-            <div className="input-group"><label>Phone Number *</label><input type="tel" value={form.customerPhone} onChange={(e) => setForm({ ...form, customerPhone: e.target.value })} placeholder="+20 100 000 0000" required /></div>
-            <div className="input-group"><label>Email (optional)</label><input type="email" value={form.customerEmail} onChange={(e) => setForm({ ...form, customerEmail: e.target.value })} placeholder="you@example.com" /></div>
-            <div className="input-group"><label>Notes (optional)</label><textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} placeholder="Any special requests?" rows={3} /></div>
+            <div className="input-group">
+              <label>Phone Number *</label>
+              <input type="tel" value={phone.value} onChange={phone.onChange} onBlur={phone.onBlur} placeholder="+20 100 000 0000" className={phone.touched && phone.error ? 'input-error' : ''} />
+              {phone.touched && phone.error && <span className="field-error">{phone.error}</span>}
+            </div>
+            <div className="input-group">
+              <label>Email (optional)</label>
+              <input type="email" value={customerEmail.value} onChange={customerEmail.onChange} onBlur={customerEmail.onBlur} placeholder="you@example.com" className={customerEmail.touched && customerEmail.error ? 'input-error' : ''} />
+              {customerEmail.touched && customerEmail.error && <span className="field-error">{customerEmail.error}</span>}
+            </div>
+            <div className="input-group">
+              <label>Notes (optional)</label>
+              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Any special requests?" rows={3} />
+            </div>
             <button type="submit" className="btn btn-primary btn-lg bk-btn" disabled={loading}>{loading ? <span className="spinner" /> : 'Confirm Reservation'}</button>
           </form>
         </div>
         <div className="bk-summary card">
           <h3>Booking Summary</h3>
           <div className="bk-summary-details">
-            <div className="bk-summary-section"><span>Services ({selectedServices.length})</span>
-              <ul>{selectedServices.map((s) => <li key={s.id}>{s.name} <span>{s.duration} min</span></li>)}</ul>
+            <div className="bk-summary-section"><span>Services ({services.length})</span>
+              <ul>{services.map((s) => <li key={s.id}>{s.name} <span>{s.duration} min</span></li>)}</ul>
             </div>
             <div className="bk-summary-row"><span>Total Duration</span><strong>{totalDuration} min</strong></div>
             <div className="bk-summary-row"><span>Total Price</span><strong className="bk-price">EGP {Number(totalPrice).toFixed(0)}</strong></div>

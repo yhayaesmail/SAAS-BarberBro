@@ -25,6 +25,7 @@ model User {
   lastName  String   @map("last_name")
   email     String   @unique
   phone     String?
+  phone2    String?   @map("phone_2")
   password  String
   role      Role     @default(CUSTOMER)
   active    Boolean  @default(true)
@@ -106,8 +107,9 @@ model Reservation {
   status        ReservationStatus @default(CONFIRMED)
   customerPhone String            @map("customer_phone")
   customerEmail String?           @map("customer_email")
-  notes         String            @default("")
-  createdAt     DateTime          @default(now()) @map("created_at")
+  notes             String            @default("")
+  cancellationReason String?          @map("cancellation_reason")
+  createdAt         DateTime          @default(now()) @map("created_at")
   updatedAt     DateTime          @updatedAt @map("updated_at")
 
   customerId String @map("customer_id")

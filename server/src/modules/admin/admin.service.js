@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import * as adminRepository from './admin.repository.js';
 import * as barberRepository from '../barbers/barber.repository.js';
+import * as authRepository from '../auth/auth.repository.js';
 import * as serviceRepository from '../services/service.repository.js';
 import * as reservationRepository from '../reservations/reservation.repository.js';
 import { NotFoundError, ConflictError, ValidationError } from '../../utils/errors.js';
@@ -36,13 +37,17 @@ export async function getDashboardStats() {
   const todayEnd = new Date(todayStart);
   todayEnd.setDate(todayEnd.getDate() + 1);
 
-  const [totalBarbers, activeBarbers, totalReservations, todayReservations, recentReservations, topServices] = await Promise.all([
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const [totalBarbers, activeBarbers, totalReservations, todayReservations, recentReservations, topServices, totalRevenue, monthlyRevenue] = await Promise.all([
     adminRepository.countBarbers(),
     adminRepository.countActiveBarbers(),
     adminRepository.countReservations(),
     adminRepository.countReservationsInRange(todayStart, todayEnd),
     adminRepository.findRecentReservations(10),
     adminRepository.findTopServices(5),
+    adminRepository.sumRevenue(),
+    adminRepository.sumRevenueSince(monthStart),
   ]);
 
   return {
@@ -50,7 +55,8 @@ export async function getDashboardStats() {
     activeBarbers,
     totalReservations,
     todayReservations,
-    revenuePlaceholder: 0,
+    totalRevenue,
+    monthlyRevenue,
     recentReservations,
     topServices,
   };
@@ -60,10 +66,21 @@ export async function createBarber(data) {
   const validationErrors = validateBarberInput(data);
   if (validationErrors.length > 0) throw new ValidationError('Validation failed', validationErrors);
 
+  if (!data.email) throw new ValidationError('Email is required for barber login');
+  const emailErr = validateEmail(data.email);
+  if (emailErr) throw new ValidationError('Validation failed', [{ field: 'email', message: emailErr }]);
+
+  if (!data.password || data.password.length < 6) {
+    throw new ValidationError('Password is required (min 6 characters)');
+  }
+
   const existingUsername = await barberRepository.findByUsername(data.username);
   if (existingUsername) throw new ConflictError('Username is already taken');
 
-  const hashedPassword = await bcrypt.hash('barber123', 12);
+  const existingEmail = await authRepository.findByEmail(data.email.trim().toLowerCase());
+  if (existingEmail) throw new ConflictError('Email is already registered');
+
+  const hashedPassword = await bcrypt.hash(data.password, 12);
   const barber = await adminRepository.createBarber(data, hashedPassword);
 
   if (data.services?.length > 0) {
@@ -117,8 +134,15 @@ export async function getBarberById(id) {
   return barber;
 }
 
-export async function getAllBarbers() {
-  return adminRepository.findAllBarbers();
+export async function getAllBarbers({ page, limit, search }) {
+  const where = {};
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: 'insensitive' } },
+      { username: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+  return adminRepository.findAllBarbers({ where, page, limit });
 }
 
 export async function createService(data) {
@@ -133,16 +157,47 @@ export async function createService(data) {
   });
 }
 
+export async function toggleServiceStatus(id) {
+  const service = await serviceRepository.findById(id);
+  if (!service) throw new NotFoundError('Service not found');
+  return serviceRepository.update(id, { active: !service.active });
+}
+
 export async function updateService(id, data) {
   const existing = await serviceRepository.findById(id);
   if (!existing) throw new NotFoundError('Service not found');
   return serviceRepository.update(id, data);
 }
 
-export async function getAllServices() {
-  return serviceRepository.findAll();
+export async function getAllServices({ page, limit, search }) {
+  const where = {};
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+  return serviceRepository.findAll({ where, page, limit });
 }
 
-export async function getAllReservations({ page, limit }) {
-  return reservationRepository.findAll({ page, limit });
+export async function getAllReservations({ page, limit, search, status }) {
+  const where = {};
+  if (status) where.status = status;
+  if (search) {
+    where.OR = [
+      { customer: { firstName: { contains: search, mode: 'insensitive' } } },
+      { customer: { lastName: { contains: search, mode: 'insensitive' } } },
+      { barber: { name: { contains: search, mode: 'insensitive' } } },
+    ];
+  }
+  return reservationRepository.findAll({ where, page, limit });
+}
+
+export async function updateReservationStatus(id, status) {
+  const validStatuses = ['PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'];
+  if (!validStatuses.includes(status)) {
+    throw new ValidationError(`Invalid status. Must be one of: ${validStatuses.join(', ')}`);
+  }
+  const reservation = await reservationRepository.findById(id);
+  if (!reservation) throw new NotFoundError('Reservation not found');
+  return reservationRepository.updateStatus(id, status);
 }

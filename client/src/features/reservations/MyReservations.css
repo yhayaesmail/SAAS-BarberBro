@@ -147,32 +147,10 @@
   margin-left: auto;
 }
 
-[data-theme='light'] .rs-page {
-  background: var(--bg-secondary);
+.rs-cancel-reason {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-style: italic;
 }
 
-[data-theme='light'] .rs-card {
-  border-color: var(--border);
-}
-
-[data-theme='light'] .rs-card-header span {
-  color: var(--text-secondary);
-}
-
-[data-theme='light'] .rs-barber h3 {
-  color: var(--text-primary);
-}
-
-[data-theme='light'] .rs-price {
-  color: var(--green-600);
-}
-
-[data-theme='light'] .rs-tag {
-  background: rgba(22, 163, 74, 0.08);
-  border-color: rgba(22, 163, 74, 0.15);
-  color: var(--green-600);
-}
-
-[data-theme='light'] .rs-card-footer {
-  border-top-color: var(--border);
-}

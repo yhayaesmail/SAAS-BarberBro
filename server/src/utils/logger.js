@@ -25,9 +25,9 @@ function shouldLog(level) {
   return levels[level] <= levels[currentLevel];
 }
 
-function write(level, msg, meta) {
+function write(level, msg, meta = {}) {
   if (!shouldLog(level)) return;
-  const entry = JSON.stringify({ level, timestamp: formatTimestamp(), message: msg, ...meta }) + '\n';
+  const entry = JSON.stringify({ level, timestamp: formatTimestamp(), message: msg, requestId: meta.requestId || null, ...meta }) + '\n';
   if (streams[level]) streams[level].write(entry);
   if (level === 'error' || level === 'warn') process.stderr.write(entry);
   else process.stdout.write(entry);

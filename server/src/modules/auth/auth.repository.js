@@ -6,6 +6,7 @@ const userSelect = {
   lastName: true,
   email: true,
   phone: true,
+  phone2: true,
   role: true,
   active: true,
   createdAt: true,
@@ -21,6 +22,13 @@ export async function findById(id) {
   return prisma.user.findUnique({
     where: { id },
     select: userSelect,
+  });
+}
+
+export async function findByIdWithPassword(id) {
+  return prisma.user.findUnique({
+    where: { id },
+    select: { ...userSelect, password: true },
   });
 }
 
@@ -62,5 +70,35 @@ export async function findBarberByUserId(userId) {
       startTime: true,
       endTime: true,
     },
+  });
+}
+
+export async function findByEmailFull(email) {
+  return prisma.user.findUnique({
+    where: { email },
+    select: {
+      id: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      role: true,
+      active: true,
+      password: true,
+    },
+  });
+}
+
+export async function update(userId, data) {
+  return prisma.user.update({
+    where: { id: userId },
+    data,
+    select: userSelect,
+  });
+}
+
+export async function updatePassword(userId, hashedPassword) {
+  return prisma.user.update({
+    where: { id: userId },
+    data: { password: hashedPassword },
   });
 }

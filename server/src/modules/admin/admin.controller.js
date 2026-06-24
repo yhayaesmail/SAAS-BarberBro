@@ -1,5 +1,5 @@
 import * as adminService from './admin.service.js';
-import { success, created } from '../../utils/response.js';
+import { success, created, paginated } from '../../utils/response.js';
 
 export async function getDashboard(req, res, next) {
   try {
@@ -48,8 +48,9 @@ export async function getBarberById(req, res, next) {
 
 export async function getAllBarbers(req, res, next) {
   try {
-    const barbers = await adminService.getAllBarbers();
-    return success(res, barbers);
+    const { page = 1, limit = 20, search } = req.query;
+    const result = await adminService.getAllBarbers({ page: Number(page), limit: Number(limit), search });
+    return paginated(res, result.data, result.total, Number(page), Number(limit));
   } catch (err) {
     next(err);
   }
@@ -75,8 +76,9 @@ export async function updateService(req, res, next) {
 
 export async function getAllServices(req, res, next) {
   try {
-    const services = await adminService.getAllServices();
-    return success(res, services);
+    const { page = 1, limit = 20, search } = req.query;
+    const result = await adminService.getAllServices({ page: Number(page), limit: Number(limit), search });
+    return paginated(res, result.data, result.total, Number(page), Number(limit));
   } catch (err) {
     next(err);
   }
@@ -84,8 +86,8 @@ export async function getAllServices(req, res, next) {
 
 export async function getAllReservations(req, res, next) {
   try {
-    const { page = 1, limit = 20 } = req.query;
-    const result = await adminService.getAllReservations({ page: Number(page), limit: Number(limit) });
+    const { page = 1, limit = 20, search, status } = req.query;
+    const result = await adminService.getAllReservations({ page: Number(page), limit: Number(limit), search, status });
     return res.status(200).json({
       success: true,
       message: 'Reservations retrieved successfully',
@@ -98,6 +100,24 @@ export async function getAllReservations(req, res, next) {
       },
       timestamp: new Date().toISOString(),
     });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function toggleServiceStatus(req, res, next) {
+  try {
+    const service = await adminService.toggleServiceStatus(req.params.id);
+    return success(res, service, `Service ${service.active ? 'activated' : 'deactivated'} successfully`);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateReservationStatus(req, res, next) {
+  try {
+    const reservation = await adminService.updateReservationStatus(req.params.id, req.body.status);
+    return success(res, reservation, `Reservation ${req.body.status.toLowerCase()} successfully`);
   } catch (err) {
     next(err);
   }

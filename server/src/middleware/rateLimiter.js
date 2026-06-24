@@ -26,3 +26,16 @@ export const authLimiter = rateLimit({
     timestamp: new Date().toISOString(),
   },
 });
+
+export const reservationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many reservations created. Please try again later.',
+    code: 'RATE_LIMIT_EXCEEDED',
+    timestamp: new Date().toISOString(),
+  },
+});

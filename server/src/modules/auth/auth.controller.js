@@ -36,3 +36,30 @@ export async function refresh(req, res, next) {
     next(err);
   }
 }
+
+export async function forgotPassword(req, res, next) {
+  try {
+    const result = await authService.forgotPassword(req.body);
+    return success(res, result, result.message);
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function resetPassword(req, res, next) {
+  try {
+    const result = await authService.resetPassword(req.body);
+    return success(res, result, 'Password reset successful');
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function updateProfile(req, res, next) {
+  try {
+    const profile = await authService.updateProfile(req.user.id, req.body);
+    return success(res, profile, 'Profile updated successfully');
+  } catch (err) {
+    next(err);
+  }
+}

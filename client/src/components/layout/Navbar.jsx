@@ -75,6 +75,9 @@ export default function Navbar() {
           {user && user.role === 'ADMIN' && (
             <Link to="/admin" className="nav-link admin-link" onClick={() => setMenuOpen(false)}>Admin</Link>
           )}
+          {user && user.role === 'BARBER' && (
+            <Link to="/my-schedule" className="nav-link" onClick={() => setMenuOpen(false)}>My Schedule</Link>
+          )}
           <div className="nav-search" ref={searchRef}>
             <form onSubmit={handleSearch}>
               <input
@@ -102,7 +105,7 @@ export default function Navbar() {
         <div className="nav-right">
           {user ? (
             <div className="nav-user">
-              <span className="nav-user-name">{user.firstName}</span>
+              <Link to="/settings" className="nav-user-name" onClick={() => setMenuOpen(false)}>{user.firstName}</Link>
               <button className="btn-signin" onClick={() => { logout(); navigate('/'); setMenuOpen(false); }}>
                 Sign Out
               </button>

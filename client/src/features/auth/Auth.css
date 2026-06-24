@@ -143,6 +143,17 @@
   font-size: 0.9375rem;
 }
 
+.auth-forgot {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.auth-forgot:hover {
+  color: var(--green-600) !important;
+}
+
 .auth-check {
   display: flex;
   align-items: center;
